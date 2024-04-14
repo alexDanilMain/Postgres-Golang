@@ -7,6 +7,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type Product struct {
+	Name      string
+	Price     float64
+	Available bool
+}
+
 func main() {
 	connectionString := "postgres://postgres:secret@localhost:5432/gopgtest?sslmode=disable"
 
