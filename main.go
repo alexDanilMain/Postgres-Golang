@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -29,6 +30,12 @@ func main() {
 	}
 
 	createProductTable(db)
+
+	product := Product{"Book", 15.55, true}
+
+	primaryKey := insertProduct(db, product)
+
+	fmt.Printf("PK = %d\n", primaryKey)
 }
 
 func createProductTable(db *sql.DB) {
