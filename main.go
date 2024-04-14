@@ -47,3 +47,17 @@ func createProductTable(db *sql.DB) {
 	}
 
 }
+
+func insertProduct(db *sql.DB, product Product) int {
+	query := `INSERT INTO product (name,price,available)
+	VALUES ($1, $2, $3) RETURNING id`
+
+	var returnedId int
+	error := db.QueryRow(query, product.Name, product.Price, product.Available).Scan(&returnedId)
+
+	if error != nil {
+		log.Fatal(error)
+	}
+
+	return returnedId
+}
