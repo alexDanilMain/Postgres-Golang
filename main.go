@@ -31,27 +31,52 @@ func main() {
 
 	createProductTable(db)
 
-	product := Product{"Book", 15.55, true}
+	// product := Product{"Book", 15.55, true}
 
-	primaryKey := insertProduct(db, product)
+	// primaryKey := insertProduct(db, product)
+
+	// var name string
+	// var available bool
+	// var price float64
+
+	// query := "SELECT name, available, price FROM product WHERE id= $1"
+	// err := db.QueryRow(query, primaryKey).Scan(&name, &available, &price)
+
+	// if err != nil {
+	// 	if err == sql.ErrNoRows {
+	// 		log.Fatal("No rows found with ID %d", primaryKey)
+	// 	}
+	// 	log.Fatal(error)
+	// }
+
+	// fmt.Printf("Name: %s\n", name)
+	// fmt.Printf("Available: %t\n", available)
+	// fmt.Printf("Price: %f\n", price)
+
+	data := []Product{}
+	query := "SELECT name, available, price FROM product"
+
+	rows, err := db.Query(query)
+
+	defer rows.Close() // prevent memory loss
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	var name string
 	var available bool
 	var price float64
 
-	query := "SELECT name, available, price FROM product WHERE id= $1"
-	err := db.QueryRow(query, primaryKey).Scan(&name, &available, &price)
-
-	if err != nil {
-		if err == sql.ErrNoRows {
-			log.Fatal("No rows found with ID %d", primaryKey)
+	for rows.Next() {
+		err := rows.Scan(&name, &available, &price)
+		if err != nil {
+			log.Fatal(err)
 		}
-		log.Fatal(error)
+		data = append(data, Product{name, price, available})
 	}
 
-	fmt.Printf("Name: %s\n", name)
-	fmt.Printf("Available: %t\n", available)
-	fmt.Printf("Price: %f\n", price)
+	fmt.Println(data)
 
 }
 
